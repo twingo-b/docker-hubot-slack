@@ -1,0 +1,23 @@
+version: '2'
+services:
+  redis:
+    image: redis:latest
+  hubot:
+    depends_on:
+      - "redis"
+    restart: always
+    build: .
+    command:
+      [ "bin/hubot", "--adapter", "slack" ]
+    mem_limit: 384m
+    environment:
+      PORT: 8089
+      REDIS_URL: "redis://redis:6379"
+      HUBOT_LOG_LEVEL: "debug"
+      HUBOT_SLACK_TOKEN:
+    ports:
+      - "8089:8089"
+    volumes:
+      - ".:/opt/app"
+    links:
+      - "redis"
